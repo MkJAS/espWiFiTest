@@ -183,22 +183,38 @@ serverInfo.sin_addr.s_addr = inet_addr("192.168.50.51"); // Convert IP string to
 	}
 
 	ESP_LOGI(TAG, "Connected to TCP server.");
+
 	bzero(readBuffer, sizeof(readBuffer));
+
     int r = read(sock, readBuffer, sizeof(readBuffer)-1);
-    for(int i = 0; i < r; i++) {
-        putchar(readBuffer[i]);
-    }
+    // for(int i = 0; i < r; i++) {
+    //     putchar(readBuffer[i]);
+    // }
+    ESP_LOGI(TAG, "Read:%s\n", readBuffer);
 
     char ackbuf[] = "Hello Server.";
 
     int bufSize = sizeof(ackbuf);
 
     r = send(sock, ackbuf, bufSize, 0 );
+    ESP_LOGI(TAG, "Sent:%s\n", readBuffer);
 
-    if (strcmp(readBuffer, "Hello Client.") == 0)
+    ESP_LOGI(TAG, "r is:%d\n", r);
+
+    while (r > 0)
     {
-    	ESP_LOGI(TAG, "We did it");
+        r = read(sock, readBuffer, sizeof(readBuffer)-1);
+        ESP_LOGI(TAG, "r is:%d\n", r);
+
+        r = send(sock, readBuffer, r, 0 );
+        ESP_LOGI(TAG, "r is:%d\n", r);
+
+        vTaskDelay(10);
     }
+
+
+    ESP_LOGI(TAG, "Exiting function.");
+
 
     return TCP_SUCCESS;
 }
