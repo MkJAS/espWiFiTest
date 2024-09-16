@@ -110,11 +110,12 @@ int __cdecl main(void)
     do {
 
         iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-        if (iResult > 0) {
+        if (iResult > 0) 
+        {
             printf("Bytes received: %d\n", iResult);
             printf(recvbuf);
 
-        // Echo the buffer back to the sender
+            // Echo the buffer back to the sender
             iSendResult = send( ClientSocket, recvbuf, iResult, 0 );
             if (iSendResult == SOCKET_ERROR) {
                 printf("send failed with error: %d\n", WSAGetLastError());
@@ -122,16 +123,18 @@ int __cdecl main(void)
                 WSACleanup();
                 return 1;
             }
-            printf("Bytes sent: %d\n", iSendResult);
+            printf("\nBytes sent: %d\n", iSendResult);
         }
         else if (iResult == 0)
             printf("Connection closing...\n");
-        else  {
+        else  
+        {
             printf("recv failed with error: %d\n", WSAGetLastError());
             closesocket(ClientSocket);
             WSACleanup();
             return 1;
         }
+        Sleep(500);
 
     } while (iResult > 0);
 
